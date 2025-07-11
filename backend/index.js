@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3000;
 // Definiamo i middleware nell'ordine in cui vogliamo vengano eseguiti
 app.use(cors({ // Configurazione CORS
     //in origin mettiamo la porta del FRONTEND
-    origin: 'http://localhost:5001', // O l'URL del tuo frontend se diverso, o true per tutti
+    origin: 'https://prova-vercel-lzdq.vercel.app/', // O l'URL del tuo frontend se diverso, o true per tutti
     credentials: true // Necessario per inviare/ricevere cookie cross-origin
 }));
 
