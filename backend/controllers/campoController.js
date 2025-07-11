@@ -37,7 +37,7 @@ exports.getAllPrenotazioni = async (req, res) => {
         const prenotazioni = await Prenotazione.find()
 
         res.json({
-            message: "Recensioni recuperate con successo.",
+            message: "Prenotazioni recuperate con successo.",
             prenotazioni,
         });
     } catch (error) {
