@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5001', 'https://prova-vercel-lzdq.vercel.app'], // URL frontend
+    origin: ['http://localhost:5001', 'https://prova-vercel-fawn.vercel.app'], // URL frontend
     credentials: true
 }));
 
