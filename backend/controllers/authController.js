@@ -1,7 +1,9 @@
+//import dei modelli utilizzati nel controller e del modulo jwt
 const User = require('../models/userModel');
 const RefreshToken = require('../models/refreshTokenModel');
 const jwt =require('jsonwebtoken');
 
+//funzione per generare i token
 const generateTokens = (userId) => {
     const accessToken = jwt.sign(
         { userId: userId }, 
@@ -16,7 +18,8 @@ const generateTokens = (userId) => {
     return { accessToken, refreshToken };
 };
 
-
+//Registrazione utente, verifica l'unicità di username ed e-mail, ed eventualmente salva il nuovo User (la cui password
+//viene hashata dal middleware pre-save definito in userModel
 exports.registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -46,6 +49,8 @@ exports.registerUser = async (req, res) => {
     }
 };
 
+//Login Utente. Verifica le credenziali ed eventualmente genera i token, inserendo nella risposta il refresh token come
+// cookie, l'access token e l'oggetto User nel body.
 exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -90,6 +95,7 @@ exports.loginUser = async (req, res) => {
     }
 };
 
+//Funzione per il refresh dell'access token, utilizzando il refresh token se valido
 exports.refreshToken = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) {
@@ -108,23 +114,16 @@ exports.refreshToken = async (req, res) => {
     console.log(`[REFRESH] Token ${refreshTokenFromCookie} TROVATO nel DB. Procedo con la verifica JWT.`);
 
     try {
-        // Cerca il refresh token nel DB
         const foundToken = await RefreshToken.findOne({ token: refreshTokenFromCookie });
         if (!foundToken) {
-            // Se il token non è nel DB ma era nel cookie, potrebbe essere stato compromesso o è vecchio.
-            // Per maggiore sicurezza, potremmo invalidare tutti i refresh token di questo utente
-            // e richiedere un nuovo login. Per ora, restituiamo solo un errore.
             return res.status(403).json({ message: "Proibito: Refresh token non valido o scaduto." });
         }
 
-        // Verifica il refresh token
         jwt.verify(refreshTokenFromCookie, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
             if (err || foundToken.userId.toString() !== decoded.userId) {
-                // Se la verifica fallisce o l'ID utente nel token non corrisponde a quello nel DB
                 return res.status(403).json({ message: "Proibito: Refresh token non valido o scaduto." });
             }
 
-            // Il refresh token è valido, genera un nuovo access token
             const newAccessToken = jwt.sign(
                 { userId: decoded.userId },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -139,6 +138,7 @@ exports.refreshToken = async (req, res) => {
     }
 };
 
+//Logout utente. Elimina il refresh token dell'utente dal db e pulisce il cookie.
 exports.logoutUser = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) {

@@ -12,7 +12,7 @@ const campoSchema= new mongoose.Schema({
     },
     disponibilità: {
         type: Map,
-        of: Number, //1=disponibile, 0 = non disponibile
+        of: Number,
         default:{}
     }
     

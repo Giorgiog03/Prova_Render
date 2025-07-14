@@ -1,8 +1,9 @@
+//import dei modelli utilizzati nel controller
 const Campo = require('../models/campoModel');
 const Recensione = require('../models/recensioneModel');
 const Prenotazione = require('../models/prenotazioneModel');
 
-
+//Funzione che restituisce tutti gli oggetti Campo trovati nel db
 exports.getAllCampi = async (req, res) => {
     try {
         const campi = await Campo.find()
@@ -17,10 +18,12 @@ exports.getAllCampi = async (req, res) => {
     }
 };
 
+//Funzione che restituisce tutti gli oggetti Recensione trovati nel db. Viene recuperata anche la proprietà username
+//di autore
 exports.getAllRecensioni = async (req, res) => {
     try {
         const recensioni = await Recensione.find()
-       .populate('autore', 'username'); // recupero nome  dell'autore della recensione
+       .populate('autore', 'username');
 
         res.json({
             message: "Recensioni recuperate con successo.",
@@ -32,12 +35,13 @@ exports.getAllRecensioni = async (req, res) => {
     }
 };
 
+//Funzione che restituisce tutti gli oggetti Prenotazione trovati nel db
 exports.getAllPrenotazioni = async (req, res) => {
     try {
         const prenotazioni = await Prenotazione.find()
 
         res.json({
-            message: "Prenotazioni recuperate con successo.",
+            message: "Recensioni recuperate con successo.",
             prenotazioni,
         });
     } catch (error) {
@@ -46,6 +50,8 @@ exports.getAllPrenotazioni = async (req, res) => {
     }
 };
 
+//Funzione che crea un nuovo oggetto recensione nel db, utilizzando i parametri passati nella richiesta. A meno di
+//errori, invia risposta di conferma creazione contenente il nuovo oggetto Recensione nel body.
 exports.createRecensione = async (req, res) => {
     try {
         const {testo, campoId} = req.body;
@@ -77,6 +83,8 @@ exports.createRecensione = async (req, res) => {
     }
 };
 
+//Eliminazione recensione dal db. Verifica la coincidenza tra id utente e id autore recensione ed eventualmente elimina
+//l'oggetto con quel recensioneId dal db.
 exports.deleteRecensione = async (req, res) => {
     try {
         const recensioneId = req.params.recensioneId;
@@ -105,6 +113,9 @@ exports.deleteRecensione = async (req, res) => {
     }
 };
 
+//Prenotazione campo. Verifica la disponibilità del campo per l'orario richiesto. Se lo trova libero, ne aggiorna la
+//proprietà disponibilità e genera un codice casuale da assegnare alla nuova Prenotazione inserita nel db,
+//passato anche al frontend nel corpo della risposta.
 exports.prenotaCampo = async (req, res) => {
 try {
         const campoId = req.params.campoId;

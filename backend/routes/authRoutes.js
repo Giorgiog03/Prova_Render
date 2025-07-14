@@ -13,6 +13,6 @@ router.post('/login', authController.loginUser);
 router.post('/refresh', authController.refreshToken);
 
 // POST /api/auth/logout
-router.post('/logout', authController.logoutUser); // verifyAccessToken non serve qui perché si basa sul cookie
+router.post('/logout', authController.logoutUser);
 
 module.exports = router;

@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
+//middleware che verifica la validità dell'access token. In caso positivo imposta req.userId e chiama il next middleware,
+//altrimenti risponde con un messaggio d'errore
+
 const verifyAccessToken = (req, res, next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization;
 
