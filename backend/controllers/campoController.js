@@ -35,21 +35,6 @@ exports.getAllRecensioni = async (req, res) => {
     }
 };
 
-//Funzione che restituisce tutti gli oggetti Prenotazione trovati nel db
-exports.getAllPrenotazioni = async (req, res) => {
-    try {
-        const prenotazioni = await Prenotazione.find()
-
-        res.json({
-            message: "Recensioni recuperate con successo.",
-            prenotazioni,
-        });
-    } catch (error) {
-        console.error("Errore recupero prenotazioni:", error);
-        res.status(500).json({ message: "Errore del server durante il recupero delle prenotazioni." });
-    }
-};
-
 //Funzione che crea un nuovo oggetto recensione nel db, utilizzando i parametri passati nella richiesta. A meno di
 //errori, invia risposta di conferma creazione contenente il nuovo oggetto Recensione nel body.
 exports.createRecensione = async (req, res) => {
